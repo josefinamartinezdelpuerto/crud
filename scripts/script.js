@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         }
 
         console.log(dataToSend)
-        await fetch(`${url}`, {
+        fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -58,18 +58,21 @@ document.addEventListener("DOMContentLoaded", ()=>{
             body: JSON.stringify(dataToSend),
         })
         .then(response => response.json())
-        .then(data =>{
-            results.innerText= ""
-            console.log(data)
-            data.forEach(user=>{
+        .then(async responseData => {
+            // After successfully posting data, make a GET request to fetch all data
+            const getResponse = await fetch(url);
+            const allData = await getResponse.json();
+            results.innerText = "";
+            console.log(allData);
+            allData.forEach(user => {
                 results.innerText += `
-                ID = ${user.id},
-                NAME = ${user.name},
-                LASTNAME = ${user.lastname}
-                `
-            
-            })
+                    ID = ${user.id},
+                    NAME = ${user.name},
+                    LASTNAME = ${user.lastname}
+                `;
+            });
         })
+    })
 
     btnDelete.addEventListener("click", ()=>{
         const idToDelete = inputDelete.value;
@@ -90,6 +93,4 @@ document.addEventListener("DOMContentLoaded", ()=>{
     })
 
     
-
-
-
+    })
